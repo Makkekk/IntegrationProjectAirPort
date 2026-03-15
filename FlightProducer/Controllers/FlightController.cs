@@ -9,23 +9,30 @@ namespace IntegrationProject.Controllers;
 [Route("api/[controller]")]
 public class FlightController : ControllerBase {
     private static List<Flight> flights = new List<Flight>();
-    private readonly MessageProducer messageProducer = new MessageProducer();
+    private readonly IMessageProducer _messageProducer;
+
+    // Her bruger vi Dependency Injection (DI). 
+    // ASP.NET Core leverer automatisk en instans af IMessageProducer til os via constructoren.
+    public FlightController(IMessageProducer messageProducer)
+    {
+        _messageProducer = messageProducer;
+    }
 
     [HttpPost]
     public async Task<IActionResult> CreateFlight([FromBody] Flight newFlight) {
         flights.Add(newFlight);
 
-        await messageProducer.SendFlightUpdate(newFlight);
+        await _messageProducer.SendFlightUpdate(newFlight);
         return Ok(flights);
     }
 
     [HttpGet]
-    public async Task<IActionResult> getFlights() {
+    public async Task<IActionResult> GetFlights() {
         return Ok(flights);
     }
 
     [HttpPut("{flightNumber}")]
-    public async Task<IActionResult> UpdateFLight(string flightNumber, [FromBody] Flight updatedFlight) {
+    public async Task<IActionResult> UpdateFlight(string flightNumber, [FromBody] Flight updatedFlight) {
         var flight = flights.FirstOrDefault(f => f.FlightNumber == flightNumber);
         if (flight == null) {
             return NotFound();
@@ -36,7 +43,7 @@ public class FlightController : ControllerBase {
         flight.Gate = updatedFlight.Gate;
         flight.Status = updatedFlight.Status;
 
-        await messageProducer.SendFlightUpdate(updatedFlight);
+        await _messageProducer.SendFlightUpdate(updatedFlight);
         return Ok(flight);
     }
 
@@ -51,7 +58,7 @@ public class FlightController : ControllerBase {
         flights.Remove(flight);
 
         flight.Status = "Cancelled";
-        await messageProducer.SendFlightUpdate(flight);
+        await _messageProducer.SendFlightUpdate(flight);
         return NoContent();
     }
 }

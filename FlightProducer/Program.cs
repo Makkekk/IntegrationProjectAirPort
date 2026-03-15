@@ -1,5 +1,9 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Her fortæller vi ASP.NET Core, hvordan det skal levere en IMessageProducer.
+// Ved at bruge AddSingleton genbruger vi den samme instans i hele applikationens levetid.
+builder.Services.AddSingleton<IntegrationProject.Service.IMessageProducer, IntegrationProject.Service.MessageProducer>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
