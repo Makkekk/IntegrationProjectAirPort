@@ -1,6 +1,6 @@
 using System.Diagnostics;
+using AirportModels;
 using Microsoft.AspNetCore.Mvc;
-using IntegrationProject.Models;
 using IntegrationProject.Service;
 
 namespace IntegrationProject.Controllers;
@@ -8,14 +8,14 @@ namespace IntegrationProject.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class FlightController : ControllerBase {
-    private static List<Flight> flights = new List<Flight>();
+    private static List<Plane> flights = new List<Plane>();
     private readonly MessageProducer messageProducer = new MessageProducer();
 
     [HttpPost]
-    public async Task<IActionResult> CreateFlight([FromBody] Flight newFlight) {
-        flights.Add(newFlight);
+    public async Task<IActionResult> CreateFlight([FromBody] Plane newPlane) {
+        flights.Add(newPlane);
 
-        await messageProducer.SendFlightUpdate(newFlight);
+        await messageProducer.SendFlightUpdate(newPlane);
         return Ok(flights);
     }
 
@@ -25,24 +25,24 @@ public class FlightController : ControllerBase {
     }
 
     [HttpPut("{flightNumber}")]
-    public async Task<IActionResult> UpdateFLight(string flightNumber, [FromBody] Flight updatedFlight) {
-        var flight = flights.FirstOrDefault(f => f.FlightNumber == flightNumber);
+    public async Task<IActionResult> UpdateFLight(string flightNumber, [FromBody] Plane updatedPlane) {
+        var flight = flights.FirstOrDefault(f => f.PlaneNumber == flightNumber);
         if (flight == null) {
             return NotFound();
         }
 
-        flight.Destination = updatedFlight.Destination;
-        flight.DepartureTime = updatedFlight.DepartureTime;
-        flight.Gate = updatedFlight.Gate;
-        flight.Status = updatedFlight.Status;
+        flight.Destination = updatedPlane.Destination;
+        flight.DepartureTime = updatedPlane.DepartureTime;
+        flight.Gate = updatedPlane.Gate;
+        flight.Status = updatedPlane.Status;
 
-        await messageProducer.SendFlightUpdate(updatedFlight);
+        await messageProducer.SendFlightUpdate(updatedPlane);
         return Ok(flight);
     }
 
     [HttpDelete("{flightNumber}")]
     public async Task<IActionResult> DeleteFlight(string flightNumber) {
-        var flight = flights.FirstOrDefault(f => f.FlightNumber == flightNumber);
+        var flight = flights.FirstOrDefault(f => f.PlaneNumber == flightNumber);
 
         if (flight == null) {
             return NotFound();
