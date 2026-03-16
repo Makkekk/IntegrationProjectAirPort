@@ -7,26 +7,30 @@ namespace IntegrationProject.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+
 public class FlightController : ControllerBase {
-    private static List<Plane> flights = new List<Plane>();
+    
+    private static List<Plane> Planes = new List<Plane>();
     private readonly MessageProducer messageProducer = new MessageProducer();
 
     [HttpPost]
     public async Task<IActionResult> CreateFlight([FromBody] Plane newPlane) {
-        flights.Add(newPlane);
-
+        if (!IsValidTerinal(newPlane.TerminalType))
+            return BadRequest("Terminal type skal være 'indenrigs' eller 'udenrigs'. ");
+        
+        Planes.Add(newPlane);
         await messageProducer.SendFlightUpdate(newPlane);
-        return Ok(flights);
+        return Ok(Planes);
     }
 
     [HttpGet]
-    public async Task<IActionResult> getFlights() {
-        return Ok(flights);
+    public async Task<IActionResult> GetFlights() {
+        return Ok(Planes);
     }
 
     [HttpPut("{flightNumber}")]
     public async Task<IActionResult> UpdateFLight(string flightNumber, [FromBody] Plane updatedPlane) {
-        var flight = flights.FirstOrDefault(f => f.PlaneNumber == flightNumber);
+        var flight = Planes.FirstOrDefault(f => f.PlaneNumber == flightNumber);
         if (flight == null) {
             return NotFound();
         }
@@ -42,16 +46,21 @@ public class FlightController : ControllerBase {
 
     [HttpDelete("{flightNumber}")]
     public async Task<IActionResult> DeleteFlight(string flightNumber) {
-        var flight = flights.FirstOrDefault(f => f.PlaneNumber == flightNumber);
+        var plane = Planes.FirstOrDefault(f => f.PlaneNumber == flightNumber);
 
-        if (flight == null) {
+        if (plane == null) {
             return NotFound();
         }
 
-        flights.Remove(flight);
+        Planes.Remove(plane);
 
-        flight.Status = "Cancelled";
-        await messageProducer.SendFlightUpdate(flight);
+        plane.Status = "Cancelled";
+        await messageProducer.SendFlightUpdate(plane);
         return NoContent();
+    }
+
+    private static bool IsValidTerinal(string? terminalType) {
+        var terminal = (terminalType ?? "").Trim().ToLowerInvariant();
+        return terminal == "indenrigs" || terminal == "udenrigs";
     }
 }
