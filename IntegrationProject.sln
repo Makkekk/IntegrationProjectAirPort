@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirPortConsumer", "AirPortC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportModels", "AirportModels\AirportModels.csproj", "{959B08A3-3E4B-4D07-9FE4-4A9E3260FDAF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{A4610013-D34C-445C-8A00-08E74A3A48DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +31,8 @@ Global
 		{959B08A3-3E4B-4D07-9FE4-4A9E3260FDAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{959B08A3-3E4B-4D07-9FE4-4A9E3260FDAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{959B08A3-3E4B-4D07-9FE4-4A9E3260FDAF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{959B08A3-3E4B-4D07-9FE4-4A9E3260FDAF} = {A4610013-D34C-445C-8A00-08E74A3A48DB}
 	EndGlobalSection
 EndGlobal
