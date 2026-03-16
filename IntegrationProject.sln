@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "readme", "readme", "{1579B5
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightConsumer", "FlightConsumer\FlightConsumer.csproj", "{E84C4F01-890A-4530-A451-F2B4023BD284}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirPortConsumer", "AirPortConsumer\AirPortConsumer.csproj", "{E84C4F01-890A-4530-A451-F2B4023BD284}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportModels", "AirportModels\AirportModels.csproj", "{959B08A3-3E4B-4D07-9FE4-4A9E3260FDAF}"
 EndProject

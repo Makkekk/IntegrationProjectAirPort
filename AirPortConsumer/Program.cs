@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using System.Text.Json;
-using IntegrationProject.Models;
+using AirportModels;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-var flights = new Dictionary<string, Flight>();
+var flights = new Dictionary<string, Plane>();
 
 var factory = new ConnectionFactory { HostName = "localhost" };
 
@@ -28,12 +28,12 @@ consumer.ReceivedAsync += async (_, ea) =>
     try
     {
         var json = Encoding.UTF8.GetString(ea.Body.ToArray());
-        var flight = JsonSerializer.Deserialize<Flight>(json);
+        var flight = JsonSerializer.Deserialize<Plane>(json);
 
-        if (flight is null || string.IsNullOrWhiteSpace(flight.FlightNumber))
+        if (flight is null || string.IsNullOrWhiteSpace(flight.PlaneNumber))
             return;
         
-        flights[flight.FlightNumber] = flight;
+        flights[flight.PlaneNumber] = flight;
 
         
         Console.Clear();
@@ -48,7 +48,7 @@ consumer.ReceivedAsync += async (_, ea) =>
 
         foreach (var f in flights.Values.OrderBy(f => f.DepartureTime))
         {
-            var flightNo = (f.FlightNumber ?? "").PadRight(10).Substring(0, 10);
+            var flightNo = (f.PlaneNumber ?? "").PadRight(10).Substring(0, 10);
             var destination = (f.Destination ?? "").PadRight(20).Substring(0, 20);
             var departure = f.DepartureTime.ToString("yyyy-MM-dd HH:mm");
             var gate = (f.Gate ?? "").PadRight(4).Substring(0, 4);
